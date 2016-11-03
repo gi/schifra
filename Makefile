@@ -20,11 +20,15 @@
 #
 
 
-COMPILER         = -c++
 OPTIMIZATION_OPT = -O3
-OPTIONS          = -ansi -pedantic-errors -Wall -Wextra -Werror -Wno-long-long $(OPTIMIZATION_OPT)
-LINKER_OPTS      = -lstdc++ -lm
+CXXFLAGS         = -ansi -pedantic-errors -Wall -Wextra -Werror -Wno-long-long $(OPTIMIZATION_OPT)
+LDLIBS           = -lstdc++ -lm
 
+ifdef threads
+LDLIBS += -pthread -lboost_thread -lboost_system
+endif
+
+LINK.cpp = $(CXX) $(CXXFLAGS)
 
 HPP_SRC+=schifra_ecc_traits.hpp
 HPP_SRC+=schifra_error_processes.hpp
@@ -41,8 +45,10 @@ HPP_SRC+=schifra_reed_solomon_product_code.hpp
 HPP_SRC+=schifra_reed_solomon_speed_evaluator.hpp
 HPP_SRC+=schifra_sequential_root_generator_polynomial_creator.hpp
 
-BUILD_LIST+=schifra_reed_solomon_codec_validation
-BUILD_LIST+=schifra_reed_solomon_speed_evaluation
+TESTS += schifra_reed_solomon_codec_validation
+TESTS += schifra_reed_solomon_speed_evaluation
+
+BUILD_LIST+=$(TESTS)
 BUILD_LIST+=schifra_reed_solomon_example01
 BUILD_LIST+=schifra_reed_solomon_example02
 BUILD_LIST+=schifra_reed_solomon_example03
@@ -64,23 +70,20 @@ BUILD_LIST+=schifra_erasure_channel_example02
 BUILD_LIST+=schifra_reed_solomon_gencodec_example
 BUILD_LIST+=schifra_reed_solomon_product_code_example
 
+ifdef threads
+BUILD_LIST+=schifra_reed_solomon_threads_example01
+BUILD_LIST+=schifra_reed_solomon_threads_example02
+endif
 
 all: $(BUILD_LIST)
 
-$(BUILD_LIST) : %: %.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o $@ $@.cpp $(LINKER_OPTS)
+%: %.cpp $(HPP_SRC)
+	$(LINK.cpp) $< $(LDLIBS) -o $@
 
-run_tests : clean all
-	./schifra_reed_solomon_codec_validation
-	./schifra_reed_solomon_speed_evaluation
+test: $(TESTS)
+	@for t in $^; do ./$$t; done
 
-schifra_reed_solomon_threads_example01: schifra_reed_solomon_threads_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_threads_example01 schifra_reed_solomon_threads_example01.cpp -pthread -lboost_thread -lboost_system
-
-schifra_reed_solomon_threads_example02: schifra_reed_solomon_threads_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_threads_example02 schifra_reed_solomon_threads_example02.cpp -pthread -lboost_thread -lboost_system
-
-strip_bin :
+clean-bin: clean
 	@for f in $(BUILD_LIST); do if [ -f $$f ]; then strip -s $$f; echo $$f; fi done;
 
 valgrind :
