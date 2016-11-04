@@ -49,31 +49,34 @@ TESTS += schifra_reed_solomon_codec_validation
 TESTS += schifra_reed_solomon_speed_evaluation
 
 BUILD_LIST+=$(TESTS)
-BUILD_LIST+=schifra_reed_solomon_example01
-BUILD_LIST+=schifra_reed_solomon_example02
-BUILD_LIST+=schifra_reed_solomon_example03
-BUILD_LIST+=schifra_reed_solomon_example04
-BUILD_LIST+=schifra_reed_solomon_example05
-BUILD_LIST+=schifra_reed_solomon_example06
-BUILD_LIST+=schifra_reed_solomon_example07
-BUILD_LIST+=schifra_reed_solomon_example08
-BUILD_LIST+=schifra_interleaving_example01
-BUILD_LIST+=schifra_interleaving_example02
-BUILD_LIST+=schifra_interleaving_example03
-BUILD_LIST+=schifra_reed_solomon_file_encoding_example
-BUILD_LIST+=schifra_reed_solomon_file_decoding_example
-BUILD_LIST+=schifra_reed_solomon_file_interleaving_example
-BUILD_LIST+=schifra_bitio_example01
-BUILD_LIST+=schifra_bitio_example02
-BUILD_LIST+=schifra_erasure_channel_example01
-BUILD_LIST+=schifra_erasure_channel_example02
-BUILD_LIST+=schifra_reed_solomon_gencodec_example
-BUILD_LIST+=schifra_reed_solomon_product_code_example
+
+EXAMPLES += schifra_reed_solomon_example01
+EXAMPLES += schifra_reed_solomon_example02
+EXAMPLES += schifra_reed_solomon_example03
+EXAMPLES += schifra_reed_solomon_example04
+EXAMPLES += schifra_reed_solomon_example05
+EXAMPLES += schifra_reed_solomon_example06
+EXAMPLES += schifra_reed_solomon_example07
+EXAMPLES += schifra_reed_solomon_example08
+EXAMPLES += schifra_interleaving_example01
+EXAMPLES += schifra_interleaving_example02
+EXAMPLES += schifra_interleaving_example03
+EXAMPLES += schifra_reed_solomon_file_encoding_example
+EXAMPLES += schifra_reed_solomon_file_decoding_example
+EXAMPLES += schifra_reed_solomon_file_interleaving_example
+EXAMPLES += schifra_bitio_example01
+EXAMPLES += schifra_bitio_example02
+EXAMPLES += schifra_erasure_channel_example01
+EXAMPLES += schifra_erasure_channel_example02
+EXAMPLES += schifra_reed_solomon_gencodec_example
+EXAMPLES += schifra_reed_solomon_product_code_example
 
 ifdef threads
-BUILD_LIST+=schifra_reed_solomon_threads_example01
-BUILD_LIST+=schifra_reed_solomon_threads_example02
+EXAMPLES += schifra_reed_solomon_threads_example01
+EXAMPLES += schifra_reed_solomon_threads_example02
 endif
+
+BUILD_LIST += $(EXAMPLES)
 
 all: $(BUILD_LIST)
 
@@ -82,6 +85,8 @@ all: $(BUILD_LIST)
 
 test: $(TESTS)
 	@for t in $^; do ./$$t; done
+
+examples: $(EXAMPLES)
 
 clean-bin: clean
 	@for f in $(BUILD_LIST); do if [ -f $$f ]; then strip -s $$f; echo $$f; fi done;
