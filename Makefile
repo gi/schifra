@@ -22,6 +22,7 @@
 ROOT != pwd
 INC = inc
 SRC = src
+LIB = lib
 TST = tst
 
 OPTIMIZE = -O3
@@ -37,6 +38,9 @@ all: lib $(TST)
 
 lib:
 
+$(SRC)/%.o: $(SRC)/%.cpp $(HEADERS)
+	$(CXX) -c $(CXXFLAGS) $<
+
 $(TST): $(TST)/all
 $(TST)/%:
 	make -C $(TST) $(@F)
@@ -47,3 +51,4 @@ run_tests : clean all $(TST)/run
 
 clean:
 	make -C $(TST) clean
+	$(RM) $(SRC)/*.o
