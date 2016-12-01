@@ -19,130 +19,31 @@
 # **************************************************************************
 #
 
-INC              = inc
-TST              = tst
+ROOT != pwd
+INC = inc
+SRC = src
+TST = tst
 
-COMPILER         = -c++
-OPTIMIZATION_OPT = -O3
-INCLUDES        += -I$(INC)
-OPTIONS          = $(INCLUDES) -ansi -pedantic-errors -Wall -Wextra -Werror -Wno-long-long -lstdc++ $(OPTIMIZATION_OPT)
+OPTIMIZE = -O3
+WARNINGS = -pedantic-errors -Wall -Wextra -Werror -Wno-long-long
+INCLUDES += -I$(ROOT)/$(INC)
+CXXFLAGS = -ansi $(OPTIMIZE) $(WARNINGS) $(INCLUDES)
 
-HPP_SRC+=$(INC)/schifra_galois_field_polynomial.hpp
-HPP_SRC+=$(INC)/schifra_galois_field.hpp
-HPP_SRC+=$(INC)/schifra_galois_field_element.hpp
-HPP_SRC+=$(INC)/schifra_error_processes.hpp
-HPP_SRC+=$(INC)/schifra_ecc_traits.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_block.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_codec_validator.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_speed_evaluator.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_encoder.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_decoder.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_file_encoder.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_file_decoder.hpp
-HPP_SRC+=$(INC)/schifra_reed_solomon_product_code.hpp
-HPP_SRC+=$(INC)/schifra_sequential_root_generator_polynomial_creator.hpp
+export ROOT
+export CXXFLAGS
+export HEADERS = $(ROOT)/$(INC)/*
 
-BUILDS+=schifra_reed_solomon_codec_validation
-BUILDS+=schifra_reed_solomon_speed_evaluation
-BUILDS+=schifra_reed_solomon_example01
-BUILDS+=schifra_reed_solomon_example02
-BUILDS+=schifra_reed_solomon_example03
-BUILDS+=schifra_reed_solomon_example04
-BUILDS+=schifra_reed_solomon_example05
-BUILDS+=schifra_reed_solomon_example06
-BUILDS+=schifra_reed_solomon_example07
-BUILDS+=schifra_reed_solomon_example08
-BUILDS+=schifra_interleaving_example01
-BUILDS+=schifra_interleaving_example02
-BUILDS+=schifra_interleaving_example03
-BUILDS+=schifra_reed_solomon_file_encoding_example
-BUILDS+=schifra_reed_solomon_file_decoding_example
-BUILDS+=schifra_reed_solomon_file_interleaving_example
-BUILDS+=schifra_bitio_example01
-BUILDS+=schifra_bitio_example02
-BUILDS+=schifra_erasure_channel_example01
-BUILDS+=schifra_erasure_channel_example02
-BUILDS+=schifra_reed_solomon_gencodec_example
-BUILDS+=schifra_reed_solomon_product_code_example
+all: lib $(TST)
 
+lib:
 
-all: $(BUILDS)
+$(TST): $(TST)/all
+$(TST)/%:
+	make -C $(TST) $(@F)
 
-run_tests : clean all
-	./schifra_reed_solomon_codec_validation
-	./schifra_reed_solomon_speed_evaluation
+tests: $(TST)/tests
 
-schifra_reed_solomon_codec_validation: $(TST)/schifra_reed_solomon_codec_validation.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_codec_validation $(TST)/schifra_reed_solomon_codec_validation.cpp
-
-schifra_reed_solomon_speed_evaluation: $(TST)/schifra_reed_solomon_speed_evaluation.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_speed_evaluation $(TST)/schifra_reed_solomon_speed_evaluation.cpp
-
-schifra_reed_solomon_file_encoding_example: $(TST)/schifra_reed_solomon_file_encoding_example.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_file_encoding_example $(TST)/schifra_reed_solomon_file_encoding_example.cpp
-
-schifra_reed_solomon_file_decoding_example: $(TST)/schifra_reed_solomon_file_decoding_example.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_file_decoding_example $(TST)/schifra_reed_solomon_file_decoding_example.cpp
-
-schifra_reed_solomon_example01: $(TST)/schifra_reed_solomon_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example01 $(TST)/schifra_reed_solomon_example01.cpp
-
-schifra_reed_solomon_example02: $(TST)/schifra_reed_solomon_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example02 $(TST)/schifra_reed_solomon_example02.cpp
-
-schifra_reed_solomon_example03: $(TST)/schifra_reed_solomon_example03.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example03 $(TST)/schifra_reed_solomon_example03.cpp
-
-schifra_reed_solomon_example04: $(TST)/schifra_reed_solomon_example04.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example04 $(TST)/schifra_reed_solomon_example04.cpp
-
-schifra_reed_solomon_example05: $(TST)/schifra_reed_solomon_example05.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example05 $(TST)/schifra_reed_solomon_example05.cpp
-
-schifra_reed_solomon_example06: $(TST)/schifra_reed_solomon_example06.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example06 $(TST)/schifra_reed_solomon_example06.cpp
-
-schifra_reed_solomon_example07: $(TST)/schifra_reed_solomon_example07.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example07 $(TST)/schifra_reed_solomon_example07.cpp
-
-schifra_reed_solomon_example08: $(TST)/schifra_reed_solomon_example08.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_example08 $(TST)/schifra_reed_solomon_example08.cpp
-
-schifra_interleaving_example01: $(TST)/schifra_interleaving_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_interleaving_example01 $(TST)/schifra_interleaving_example01.cpp
-
-schifra_interleaving_example02: $(TST)/schifra_interleaving_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_interleaving_example02 $(TST)/schifra_interleaving_example02.cpp
-
-schifra_interleaving_example03: $(TST)/schifra_interleaving_example03.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_interleaving_example03 $(TST)/schifra_interleaving_example03.cpp
-
-schifra_reed_solomon_file_interleaving_example: $(TST)/schifra_reed_solomon_file_interleaving_example.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_file_interleaving_example $(TST)/schifra_reed_solomon_file_interleaving_example.cpp
-
-schifra_bitio_example01: $(TST)/schifra_bitio_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_bitio_example01 $(TST)/schifra_bitio_example01.cpp
-
-schifra_bitio_example02: $(TST)/schifra_bitio_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_bitio_example02 $(TST)/schifra_bitio_example02.cpp
-
-schifra_erasure_channel_example01: $(TST)/schifra_erasure_channel_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_erasure_channel_example01 $(TST)/schifra_erasure_channel_example01.cpp
-
-schifra_erasure_channel_example02: $(TST)/schifra_erasure_channel_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_erasure_channel_example02 $(TST)/schifra_erasure_channel_example02.cpp
-
-schifra_reed_solomon_gencodec_example: $(TST)/schifra_reed_solomon_gencodec_example.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_gencodec_example $(TST)/schifra_reed_solomon_gencodec_example.cpp
-
-schifra_reed_solomon_product_code_example : $(TST)/schifra_reed_solomon_product_code_example.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_product_code_example $(TST)/schifra_reed_solomon_product_code_example.cpp
-
-schifra_reed_solomon_threads_example01: $(TST)/schifra_reed_solomon_threads_example01.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_threads_example01 $(TST)/schifra_reed_solomon_threads_example01.cpp -pthread -lboost_thread
-
-schifra_reed_solomon_threads_example02: $(TST)/schifra_reed_solomon_threads_example02.cpp $(HPP_SRC)
-	$(COMPILER) $(OPTIONS) -o schifra_reed_solomon_threads_example02 $(TST)/schifra_reed_solomon_threads_example02.cpp -pthread -lboost_thread
+run_tests : clean all $(TST)/run
 
 clean:
-	rm -f core.* *.o *.bak *stackdump *~
+	make -C $(TST) clean
